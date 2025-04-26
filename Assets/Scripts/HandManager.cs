@@ -19,6 +19,16 @@ public class HandManager : MonoBehaviour
         
     }
 
+    public void ResetHand()
+    {
+        foreach (GameObject card in cardsInHand)
+        {
+            Destroy(card);
+        }
+        cardsInHand.Clear();
+        cardsData.Clear();
+    }
+
     public int GetTotal()
     {
         int total = 0;

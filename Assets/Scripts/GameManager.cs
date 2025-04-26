@@ -8,11 +8,24 @@ public class GameManager : MonoBehaviour
     public HandManager playerHand;
     public DeckManager playerDeck;
     public UIManager uiManager;
+    int score = 0;
+    public int Score
+    {
+        get { return score; }
+        set
+        {
+            score = value;
+            uiManager.UpdateUI();
+        }
+    }
+    public int playerRoundsWon = 0;
+    public int playerRoundsLost = 0;
     public enum GameState
     {
         PlayerTurn,
         DealerTurn,
-        RoundOver
+        RoundWon,
+        RoundLost
     }
     public GameState state = GameState.PlayerTurn;
 
@@ -36,7 +49,7 @@ public class GameManager : MonoBehaviour
         uiManager.UpdateUI();
         if(playerHand.GetTotal() > 21)
         {
-            state = GameState.RoundOver;
+            StartCoroutine(Lose());
             return;
         }
         state = GameState.DealerTurn;
@@ -49,14 +62,33 @@ public class GameManager : MonoBehaviour
     {
         state = GameState.DealerTurn;
         StartCoroutine(DealerTurnWithDelay(true));
-
-
-
     }
 
-    void Lose()
+    IEnumerator Lose()
     {
+        state = GameState.RoundLost;
+        playerRoundsLost++;
+        Score -= 1;
+        uiManager.UpdateUI();
+        yield return new WaitForSeconds(2f);
+        ResetGame();
+    }
 
+    IEnumerator Win()
+    {
+        state = GameState.RoundWon;
+        playerRoundsWon++;
+        Score += 1;
+        uiManager.UpdateUI();
+        yield return new WaitForSeconds(2f);
+        ResetGame();
+    }
+    void ResetGame()
+    {
+        playerHand.ResetHand();
+        dealer.ResetHand();
+        state = GameState.PlayerTurn;
+        uiManager.UpdateUI();
     }
 
     IEnumerator DealerTurnWithDelay(bool fullTurn)
@@ -73,7 +105,18 @@ public class GameManager : MonoBehaviour
                 result = dealer.TakeTurn();
                 uiManager.UpdateUI();
             }
-            state = GameState.RoundOver;
+            if(dealer.HandTotal() > 21)
+            {
+                StartCoroutine(Win());
+            }
+            else if (dealer.HandTotal() >= playerHand.GetTotal())
+            {
+                StartCoroutine(Lose()); // dealer wins
+            }
+            else
+            {
+                StartCoroutine(Win()); // player wins
+            }
         }
         else
         {
