@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66b4f02b43af8494ea47df7718766ff0, type: 3}
-  m_Name: 1Hearts
+  m_Name: QDiamonds
   m_EditorClassIdentifier: 
-  value: 1
-  cardSuit: 1
+  value: 10
+  cardSuit: 2
   cardType: 00000000
   cardSprite: {fileID: 4315214628464698562, guid: ed4590ac84a0e9940a208dad8aa11278, type: 3}

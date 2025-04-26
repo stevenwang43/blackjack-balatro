@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public TMP_Text playerHandTotal;
     public TMP_Text dealerHandTotal;
     public HandManager playerHand;
+    public HandManager dealerHand;
     public GameManager gameManager;
     public Dealer dealer;
     public TMP_Text gameResultText;
