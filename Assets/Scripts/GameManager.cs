@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
         set
         {
             score = value;
-            uiManager.UpdateUI();
+            uiManager.UpdateGameplayUI();
         }
     }
     public int playerRoundsWon = 0;
@@ -45,8 +45,9 @@ public class GameManager : MonoBehaviour
 
     public void PlayerDraw()
     {
+        Debug.Log("Player Draws Card");
         playerDeck.DrawCard(playerHand);
-        uiManager.UpdateUI();
+        uiManager.UpdateGameplayUI();
         if(playerHand.GetTotal() > 21)
         {
             StartCoroutine(Lose());
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayerStand()
     {
+        Debug.Log("Player Stands");
         state = GameState.DealerTurn;
         StartCoroutine(DealerTurnWithDelay(true));
     }
@@ -69,7 +71,7 @@ public class GameManager : MonoBehaviour
         state = GameState.RoundLost;
         playerRoundsLost++;
         Score -= 1;
-        uiManager.UpdateUI();
+        uiManager.UpdateGameplayUI();
         yield return new WaitForSeconds(2f);
         ResetGame();
     }
@@ -79,16 +81,29 @@ public class GameManager : MonoBehaviour
         state = GameState.RoundWon;
         playerRoundsWon++;
         Score += 1;
-        uiManager.UpdateUI();
+        uiManager.UpdateGameplayUI();
         yield return new WaitForSeconds(2f);
         ResetGame();
     }
-    void ResetGame()
+    public void ResetGame()
     {
         playerHand.ResetHand();
         dealer.ResetHand();
         state = GameState.PlayerTurn;
-        uiManager.UpdateUI();
+        uiManager.UpdateGameplayUI();
+    }
+
+    public void StartNewGame()
+    {
+        playerHand.ResetHand();
+        dealer.ResetHand();
+        playerDeck.ResetDeck();
+        playerRoundsWon = 0;
+        playerRoundsLost = 0;
+        Score = 0;
+        state = GameState.PlayerTurn;
+        uiManager.StartGame();
+        uiManager.UpdateGameplayUI();
     }
 
     IEnumerator DealerTurnWithDelay(bool fullTurn)
@@ -98,12 +113,12 @@ public class GameManager : MonoBehaviour
         if (fullTurn)
         {
             int result = dealer.TakeTurn();
-            uiManager.UpdateUI();
+            uiManager.UpdateGameplayUI();
             while (result == 1)
             {
                 yield return new WaitForSeconds(0.5f); // delay between dealer actions
                 result = dealer.TakeTurn();
-                uiManager.UpdateUI();
+                uiManager.UpdateGameplayUI();
             }
             if(dealer.HandTotal() > 21)
             {
@@ -121,7 +136,7 @@ public class GameManager : MonoBehaviour
         else
         {
             dealer.TakeTurn(); // just one action
-            uiManager.UpdateUI();
+            uiManager.UpdateGameplayUI();
             state = GameState.PlayerTurn;
         }
     }

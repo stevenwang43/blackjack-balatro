@@ -1,57 +1,55 @@
 using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
 
 public class UIManager : MonoBehaviour
 {
-    public Button hitButton;
-    public Button standButton;
-    public TMP_Text playerHandTotal;
-    public TMP_Text dealerHandTotal;
+    public GameplayPanelController gameplayPanelController;
+    public StartPanelController startPanelController;
+
     public HandManager playerHand;
-    public HandManager dealerHand;
-    public GameManager gameManager;
     public Dealer dealer;
-    public TMP_Text gameResultText;
-    public TMP_Text playerScoreText;
-    public TMP_Text gameCountText;
+    public GameManager gameManager;
+    public MainManager mainManager;
 
     void Start()
     {
-        hitButton.onClick.AddListener(() => gameManager.PlayerDraw());
-        standButton.onClick.AddListener(() => gameManager.PlayerStand());
-        UpdateUI();
+        // Setup the Start Panel
+        startPanelController.SetupStartButton(() => mainManager.StartGame());
     }
 
-    public void UpdateUI()
+    public void StartGame()
     {
-        playerHandTotal.text = playerHand.GetTotal().ToString();
-        dealerHandTotal.text = dealer.HandTotal().ToString();
-        playerScoreText.text = gameManager.Score.ToString();
-        gameCountText.text = gameManager.playerRoundsWon.ToString() + " / " + gameManager.playerRoundsLost.ToString();
-        if (gameManager.state == GameManager.GameState.PlayerTurn)
+        Debug.Log("Game Started");
+        gameplayPanelController.SetupButtons(
+            onHit: () => gameManager.PlayerDraw(),
+            onStand: () => gameManager.PlayerStand()
+        );
+        UpdateGameplayUI();
+    }
+
+    public void UpdateGameplayUI()
+    {
+        gameplayPanelController.UpdateHandTotals(
+            playerHand.GetTotal(),
+            dealer.HandTotal()
+        );
+
+        gameplayPanelController.UpdateScore(gameManager.Score);
+        gameplayPanelController.UpdateGameCount(gameManager.playerRoundsWon, gameManager.playerRoundsLost);
+
+        switch (gameManager.state)
         {
-            hitButton.gameObject.SetActive(true);
-            standButton.gameObject.SetActive(true);
-            gameResultText.text = "";
-        }
-        else if (gameManager.state == GameManager.GameState.DealerTurn)
-        {
-            hitButton.gameObject.SetActive(false);
-            standButton.gameObject.SetActive(false);
-            gameResultText.text = "Dealer's Turn";
-        }
-        else if (gameManager.state == GameManager.GameState.RoundWon)
-        {
-            hitButton.gameObject.SetActive(false);
-            standButton.gameObject.SetActive(false);
-            gameResultText.text = "You Win!";
-        }
-        else if (gameManager.state == GameManager.GameState.RoundLost)
-        {
-            hitButton.gameObject.SetActive(false);
-            standButton.gameObject.SetActive(false);
-            gameResultText.text = "You Lose!";
+            case GameManager.GameState.PlayerTurn:
+                gameplayPanelController.SetGameStateUI("", true);
+                break;
+            case GameManager.GameState.DealerTurn:
+                gameplayPanelController.SetGameStateUI("Dealer's Turn", false);
+                break;
+            case GameManager.GameState.RoundWon:
+                gameplayPanelController.SetGameStateUI("You Win!", false);
+                break;
+            case GameManager.GameState.RoundLost:
+                gameplayPanelController.SetGameStateUI("You Lose!", false);
+                break;
         }
     }
 }

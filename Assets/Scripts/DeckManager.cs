@@ -25,6 +25,12 @@ public class DeckManager : MonoBehaviour
         currentIndex = (currentIndex + 1) % allCards.Count;
     }
 
+    public void ResetDeck()
+    {
+        currentIndex = 0;
+        Shuffle();
+    }
+
     private void Shuffle()
     {
         for (int i = allCards.Count - 1; i > 0; i--)
