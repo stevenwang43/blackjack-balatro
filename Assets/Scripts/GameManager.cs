@@ -78,6 +78,7 @@ public class GameManager : MonoBehaviour
         else
         {
             dealer.TakeTurn(); // just one action
+            uiManager.UpdateUI();
             state = GameState.PlayerTurn;
         }
     }

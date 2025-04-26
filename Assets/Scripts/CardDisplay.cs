@@ -16,7 +16,7 @@ public class CardDisplay : MonoBehaviour
 
     public void UpdateCardDisplay()
     {
-        valueText.text = cardData.value.ToString();
+        valueText.text = cardData.displayValue;
 
         for (int i = 0; i < suitImages.Length; i++) {
             if (i == cardData.cardSuit) {
