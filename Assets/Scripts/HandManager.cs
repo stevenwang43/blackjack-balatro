@@ -11,6 +11,7 @@ public class HandManager : MonoBehaviour
     public Transform handTransform;
     public float cardSpacing = 2f;
     public List<GameObject> cardsInHand = new List<GameObject>();
+    public List<Card> cardsData = new List<Card>();
 
 
     void Start()
@@ -18,10 +19,23 @@ public class HandManager : MonoBehaviour
         
     }
 
+    public int GetTotal()
+    {
+        int total = 0;
+        foreach (Card c in cardsData)
+        {
+            total += c.value;
+        }
+        return total;
+
+    }
+
+
     public void AddCardToHand(Card cardData)
     {
         GameObject newCard = Instantiate(card, handTransform.position, Quaternion.identity, handTransform);
         cardsInHand.Add(newCard);
+        cardsData.Add(cardData);
         newCard.GetComponent<CardDisplay>().cardData = cardData;
 
         UpdateHandVisuals();
