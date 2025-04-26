@@ -8,6 +8,7 @@ namespace Blackjack
     {
         public int value;
         public int cardSuit;
+        public string displayValue = "";
         public List<CardType> cardType;
 
         public Sprite cardSprite;
