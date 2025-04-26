@@ -22,5 +22,10 @@ public class Dealer : MonoBehaviour
         return hand.GetTotal();
     }
 
+    public void ResetHand()
+    {
+        hand.ResetHand();
+    }
+
 
 }
