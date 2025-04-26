@@ -29,6 +29,7 @@ public class MainManager : MonoBehaviour
     public void StartGame()
     {
         game.StartNewGame();
+        setScene(SceneState.InGame);
     }
 
     public void setScene( SceneState newState)

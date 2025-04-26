@@ -45,6 +45,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayerDraw()
     {
+        Debug.Log("Player Draws Card");
         playerDeck.DrawCard(playerHand);
         uiManager.UpdateGameplayUI();
         if(playerHand.GetTotal() > 21)
@@ -60,6 +61,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayerStand()
     {
+        Debug.Log("Player Stands");
         state = GameState.DealerTurn;
         StartCoroutine(DealerTurnWithDelay(true));
     }
@@ -100,6 +102,7 @@ public class GameManager : MonoBehaviour
         playerRoundsLost = 0;
         Score = 0;
         state = GameState.PlayerTurn;
+        uiManager.StartGame();
         uiManager.UpdateGameplayUI();
     }
 

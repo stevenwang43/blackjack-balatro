@@ -17,7 +17,11 @@ public class GameplayPanelController : MonoBehaviour
         hitButton.onClick.RemoveAllListeners();
         standButton.onClick.RemoveAllListeners();
         hitButton.onClick.AddListener(() => onHit());
-        standButton.onClick.AddListener(() => onStand());
+        standButton.onClick.AddListener(() => 
+        {
+            Debug.Log("Player Stand button clicked");
+            onStand();
+        });
     }
 
     public void UpdateHandTotals(int playerTotal, int dealerTotal)

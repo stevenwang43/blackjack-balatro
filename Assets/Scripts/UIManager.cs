@@ -3,12 +3,22 @@ using UnityEngine;
 public class UIManager : MonoBehaviour
 {
     public GameplayPanelController gameplayPanelController;
+    public StartPanelController startPanelController;
+
     public HandManager playerHand;
     public Dealer dealer;
     public GameManager gameManager;
+    public MainManager mainManager;
 
     void Start()
     {
+        // Setup the Start Panel
+        startPanelController.SetupStartButton(() => mainManager.StartGame());
+    }
+
+    public void StartGame()
+    {
+        Debug.Log("Game Started");
         gameplayPanelController.SetupButtons(
             onHit: () => gameManager.PlayerDraw(),
             onStand: () => gameManager.PlayerStand()
