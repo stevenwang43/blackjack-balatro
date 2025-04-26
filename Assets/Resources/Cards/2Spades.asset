@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   value: 2
   cardSuit: 0
+  displayValue: 2
   cardType: 00000000
   cardSprite: {fileID: 4315214628464698562, guid: ed4590ac84a0e9940a208dad8aa11278, type: 3}
