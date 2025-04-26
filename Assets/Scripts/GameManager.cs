@@ -83,10 +83,22 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
         ResetGame();
     }
-    void ResetGame()
+    public void ResetGame()
     {
         playerHand.ResetHand();
         dealer.ResetHand();
+        state = GameState.PlayerTurn;
+        uiManager.UpdateUI();
+    }
+
+    public void StartNewGame()
+    {
+        playerHand.ResetHand();
+        dealer.ResetHand();
+        playerDeck.ResetDeck();
+        playerRoundsWon = 0;
+        playerRoundsLost = 0;
+        Score = 0;
         state = GameState.PlayerTurn;
         uiManager.UpdateUI();
     }

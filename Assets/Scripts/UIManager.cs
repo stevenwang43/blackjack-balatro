@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour
     public HandManager playerHand;
     public HandManager dealerHand;
     public GameManager gameManager;
+    public RunManager runManager;
     public Dealer dealer;
     public TMP_Text gameResultText;
     public TMP_Text playerScoreText;
@@ -29,29 +30,28 @@ public class UIManager : MonoBehaviour
         dealerHandTotal.text = dealer.HandTotal().ToString();
         playerScoreText.text = gameManager.Score.ToString();
         gameCountText.text = gameManager.playerRoundsWon.ToString() + " / " + gameManager.playerRoundsLost.ToString();
-        if (gameManager.state == GameManager.GameState.PlayerTurn)
+        switch (gameManager.state)
         {
-            hitButton.gameObject.SetActive(true);
-            standButton.gameObject.SetActive(true);
-            gameResultText.text = "";
-        }
-        else if (gameManager.state == GameManager.GameState.DealerTurn)
-        {
-            hitButton.gameObject.SetActive(false);
-            standButton.gameObject.SetActive(false);
-            gameResultText.text = "Dealer's Turn";
-        }
-        else if (gameManager.state == GameManager.GameState.RoundWon)
-        {
-            hitButton.gameObject.SetActive(false);
-            standButton.gameObject.SetActive(false);
-            gameResultText.text = "You Win!";
-        }
-        else if (gameManager.state == GameManager.GameState.RoundLost)
-        {
-            hitButton.gameObject.SetActive(false);
-            standButton.gameObject.SetActive(false);
-            gameResultText.text = "You Lose!";
+            case GameManager.GameState.PlayerTurn:
+                hitButton.gameObject.SetActive(true);
+                standButton.gameObject.SetActive(true);
+                gameResultText.text = "";
+                break;
+            case GameManager.GameState.DealerTurn:
+                hitButton.gameObject.SetActive(false);
+                standButton.gameObject.SetActive(false);
+                gameResultText.text = "Dealer's Turn";
+                break;
+            case GameManager.GameState.RoundWon:
+                hitButton.gameObject.SetActive(false);
+                standButton.gameObject.SetActive(false);
+                gameResultText.text = "You Win!";
+                break;
+            case GameManager.GameState.RoundLost:
+                hitButton.gameObject.SetActive(false);
+                standButton.gameObject.SetActive(false);
+                gameResultText.text = "You Lose!";
+                break;
         }
     }
 }
