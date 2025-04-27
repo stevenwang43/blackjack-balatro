@@ -31,15 +31,28 @@ public class HandManager : MonoBehaviour
 
     public int GetTotal()
     {
-        int total = 0;
+        float total = 0;
+        
+        // Get card value multiplier if ModifierManager exists
+        float cardValueMultiplier = 1.0f;
+        if (ModifierManager.Instance != null)
+        {
+            cardValueMultiplier = ModifierManager.Instance.GetModifierValue(ModifierManager.ModifierType.CardValueMultiplier);
+        }
+        
         foreach (Card c in cardsData)
         {
-            total += c.value;
+            total += c.value * cardValueMultiplier;
         }
-        return total;
-
+        
+        // Apply hand total bonus if ModifierManager exists
+        if (ModifierManager.Instance != null)
+        {
+            total += ModifierManager.Instance.GetModifierValue(ModifierManager.ModifierType.HandTotalBonus);
+        }
+        
+        return Mathf.RoundToInt(total);
     }
-
 
     public void AddCardToHand(Card cardData)
     {
