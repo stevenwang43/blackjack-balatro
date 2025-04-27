@@ -562,8 +562,8 @@ MonoBehaviour:
   suitImages:
   - {fileID: 6444743139129090846}
   - {fileID: 3505320952051501461}
-  - {fileID: 2780612352762669641}
   - {fileID: 6405378036659417210}
+  - {fileID: 2780612352762669641}
 --- !u!1 &7829598912049081898
 GameObject:
   m_ObjectHideFlags: 0
