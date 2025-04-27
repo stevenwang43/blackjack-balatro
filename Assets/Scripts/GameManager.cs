@@ -86,6 +86,12 @@ public class GameManager : MonoBehaviour
         state = GameState.RoundLost;
         playerRoundsLost++;
         
+        // Play lose sound effect
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySound(AudioManager.SoundType.Lose);
+        }
+        
         // Apply score modifier
         float scoreMultiplier = 1.0f;
         if (modifierManager != null)
@@ -110,6 +116,12 @@ public class GameManager : MonoBehaviour
     {
         state = GameState.RoundWon;
         playerRoundsWon++;
+        
+        // Play win sound effect
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySound(AudioManager.SoundType.Win);
+        }
         
         // Apply score modifier
         float scoreMultiplier = 1.0f;
