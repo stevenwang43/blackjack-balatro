@@ -1,7 +1,6 @@
 using UnityEngine;
 using Blackjack;
 using System.Collections.Generic;
-using System;
 
 public class HandManager : MonoBehaviour
 {
@@ -12,12 +11,6 @@ public class HandManager : MonoBehaviour
     public float cardSpacing = 2f;
     public List<GameObject> cardsInHand = new List<GameObject>();
     public List<Card> cardsData = new List<Card>();
-
-
-    void Start()
-    {
-        
-    }
 
     public void ResetHand()
     {
@@ -56,7 +49,21 @@ public class HandManager : MonoBehaviour
         int cardCount = cardsInHand.Count;
         for (int i = 0; i < cardCount; i++) {
             float horizontalOffset = i * cardSpacing;
-            cardsInHand[i].transform.localPosition = new Vector3(horizontalOffset, 0f, 0f);
+            Vector3 newPosition = new Vector3(horizontalOffset, 0f, 0f);
+            cardsInHand[i].GetComponent<DragUIObject>().SetPosition(newPosition);
         }
     }
+
+    public void ReorderCards()
+    {
+        cardsInHand.Sort((a, b) => a.transform.localPosition.x.CompareTo(b.transform.localPosition.x));
+
+        for (int i = 0; i < cardsInHand.Count; i++)
+        {
+            float horizontalOffset = i * cardSpacing;
+            Vector3 newPosition = new Vector3(horizontalOffset, 0f, 0f);
+            cardsInHand[i].GetComponent<DragUIObject>().SetPosition(newPosition);
+        }
+    }
+
 }
