@@ -19,7 +19,7 @@ MonoBehaviour:
   cardSprite: {fileID: 0}
   hasModifier: 1
   modifierName: Value Boost
-  modifierDescription: Cards worth 20% more for 3 rounds
+  modifierDescription: Cards worth 20% more
   modifierEffect: 2
   modifierValue: 0.2
-  modifierDuration: 3
+  modifierDuration: -1

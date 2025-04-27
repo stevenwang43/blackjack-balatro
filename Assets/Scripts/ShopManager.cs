@@ -115,6 +115,12 @@ public class ShopManager : MonoBehaviour {
         if (currentMoney >= (int)rerollCost) {
             currentMoney -= (int)rerollCost;
             rerollCost *= 1.15f;
+            
+            // Play button click sound
+            if (AudioManager.Instance != null) {
+                AudioManager.Instance.PlaySound(AudioManager.SoundType.ButtonClick);
+            }
+            
             UpdateMoneyUI();
             UpdateRerollUI();
             LoadShopItems();
@@ -122,6 +128,11 @@ public class ShopManager : MonoBehaviour {
     }
 
     public void ExitShop() {
+        // Play button click sound
+        if (AudioManager.Instance != null) {
+            AudioManager.Instance.PlaySound(AudioManager.SoundType.ButtonClick);
+        }
+
         foreach (ShopSlot slot in activeSlots) {
             if (slot != null)
                 Destroy(slot.gameObject);
@@ -139,6 +150,12 @@ public class ShopManager : MonoBehaviour {
             currentMoney -= slot.price;
             deckManager.allCards.Add(slot.card);
             
+            // Play appropriate sound effect
+            if (AudioManager.Instance != null) {
+                AudioManager.Instance.PlaySound(AudioManager.SoundType.CardFlip);
+                
+            }
+            
             // Apply card modifiers if it has any
             if (slot.card.hasModifier) {
                 slot.card.ApplyModifier();
@@ -150,11 +167,20 @@ public class ShopManager : MonoBehaviour {
             UpdateMoneyUI();
             UpdateRerollUI();
         }
+        else {
+            AudioManager.Instance?.PlaySound(AudioManager.SoundType.Denied);
+            Debug.LogWarning($"Not enough money to buy {slot.card.name}. Current money: {currentMoney}, Price: {slot.price}");
+        }
     }
 
     public void GainMoney(int money) {
         currentMoney += money;
         UpdateMoneyUI();
+        
+        // Play money sound effect
+        if (AudioManager.Instance != null) {
+            AudioManager.Instance.PlaySound(AudioManager.SoundType.MoneyGain);
+        }
     }
 
     void UpdateMoneyUI() {
