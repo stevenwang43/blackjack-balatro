@@ -16,6 +16,12 @@ public class DeckManager : MonoBehaviour
 
     public void DrawCard(HandManager handManager)
     {
+        // Play card deal sound effect
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySound(AudioManager.SoundType.CardDeal);
+        }
+        
         handManager.AddCardToHand(deckCards[0]);
         deckCards.RemoveAt(0);
     }
@@ -25,6 +31,12 @@ public class DeckManager : MonoBehaviour
         deckCards.Clear();
         deckCards.AddRange(allCards);
         Shuffle();
+        
+        // Play shuffle sound effect
+        if (AudioManager.Instance != null)
+        {
+            AudioManager.Instance.PlaySound(AudioManager.SoundType.CardShuffle);
+        }
     }
 
     private void Shuffle()
