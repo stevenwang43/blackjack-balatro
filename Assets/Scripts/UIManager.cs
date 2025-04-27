@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     public Dealer dealer;
     public GameManager gameManager;
     public MainManager mainManager;
+    public DeckManager playerDeck;
 
     void Start()
     {
@@ -35,6 +36,7 @@ public class UIManager : MonoBehaviour
 
         gameplayPanelController.UpdateScore(gameManager.Score);
         gameplayPanelController.UpdateGameCount(gameManager.playerRoundsWon, gameManager.playerRoundsLost);
+        gameplayPanelController.UpdateDeckText(playerDeck.deckCards.Count, playerDeck.allCards.Count);
 
         switch (gameManager.state)
         {

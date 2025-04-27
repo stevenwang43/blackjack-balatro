@@ -5,42 +5,36 @@ using Blackjack;
 public class DeckManager : MonoBehaviour
 {
     public List<Card> allCards = new List<Card>();
-    private int currentIndex = 0;
+    public List<Card> deckCards = new List<Card>();
 
     void Start()
     {
-        Card[] cards = Resources.LoadAll<Card>("Cards");
+        Card[] cards = Resources.LoadAll<Card>("Standard Deck");
         allCards.AddRange(cards);
-        Shuffle(); // Shuffle the deck after loading
+        ResetDeck();
     }
 
-    public void DrawCard(HandManager handManager)
+    public void DrawCard(HandManager handManager) // broken, dealer always calls drawcard
     {
-        if (allCards.Count == 0) {
-            return;
-        }
-
-        Card nextCard = allCards[currentIndex];
-        handManager.AddCardToHand(nextCard);
-        currentIndex = (currentIndex + 1) % allCards.Count;
+        handManager.AddCardToHand(deckCards[0]);
+        deckCards.RemoveAt(0);
     }
 
     public void ResetDeck()
     {
-        currentIndex = 0;
+        deckCards.Clear();
+        deckCards.AddRange(allCards);
         Shuffle();
     }
 
     private void Shuffle()
     {
-        for (int i = allCards.Count - 1; i > 0; i--)
+        for (int i = deckCards.Count - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
-            Card temp = allCards[i];
-            allCards[i] = allCards[j];
-            allCards[j] = temp;
+            Card temp = deckCards[i];
+            deckCards[i] = deckCards[j];
+            deckCards[j] = temp;
         }
-
-        currentIndex = 0; // Reset the draw index after shuffle
     }
 }

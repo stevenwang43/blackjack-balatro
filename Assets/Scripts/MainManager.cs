@@ -6,6 +6,7 @@ public class MainManager : MonoBehaviour
     public GameManager game;
     public GameObject gameplayPanel; 
     public GameObject startPanel;
+    public GameObject shopPanel;
     public enum SceneState
     {
         StartMenu,
@@ -40,12 +41,17 @@ public class MainManager : MonoBehaviour
             case SceneState.StartMenu:
                 startPanel.SetActive(true);
                 gameplayPanel.SetActive(false);
+                shopPanel.SetActive(false);
                 break;
             case SceneState.InGame:
                 startPanel.SetActive(false);
                 gameplayPanel.SetActive(true);
+                shopPanel.SetActive(false);
                 break;
             case SceneState.Shop:
+                startPanel.SetActive(false);
+                gameplayPanel.SetActive(false);
+                shopPanel.SetActive(true);
                 break;
             case SceneState.Pause:
                 break;
