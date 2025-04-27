@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     public DeckManager playerDeck;
     public UIManager uiManager;
     public MainManager manager;
+    public ShopManager shopManager;
 
     int score = 0;
     public int Score
@@ -30,20 +31,6 @@ public class GameManager : MonoBehaviour
         RoundLost
     }
     public GameState state = GameState.PlayerTurn;
-
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     public void PlayerDraw()
     {
@@ -86,8 +73,9 @@ public class GameManager : MonoBehaviour
         uiManager.UpdateGameplayUI();
 
         yield return new WaitForSeconds(2f);
-        if (playerRoundsWon == 3) {
+        if (playerRoundsWon == 1) {
             yield return new WaitForSeconds(2f);
+            shopManager.GainMoney(15);
             manager.setScene(MainManager.SceneState.Shop);
         } else {
             ResetGame();

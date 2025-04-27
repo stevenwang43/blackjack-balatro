@@ -14,7 +14,7 @@ public class DeckManager : MonoBehaviour
         ResetDeck();
     }
 
-    public void DrawCard(HandManager handManager) // broken, dealer always calls drawcard
+    public void DrawCard(HandManager handManager)
     {
         handManager.AddCardToHand(deckCards[0]);
         deckCards.RemoveAt(0);
