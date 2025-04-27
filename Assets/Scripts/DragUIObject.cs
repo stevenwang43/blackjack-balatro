@@ -9,6 +9,8 @@ public class DragUIObject : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     private Vector2 originalLocalPointerPosition;
     private Vector3 originalPanelLocalPosition;
     public GameObject highlightObject;
+    public HandManager handManager;
+    public UIManager uiManager;
     public float movementSensitivity = 1.0f; // Adjustable sensitivity
     public float hoverHeight = 50f; // How much to move the card up on hover
     private Vector3 returnPosition; // Store the original position for resetting on hover exit
@@ -16,17 +18,26 @@ public class DragUIObject : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     private bool isDragging = false; // Flag to indicate if the object is being dragged
 
+    private Canvas cardCanvas; // The canvas attached to the card
+
     void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
         returnPosition = rectTransform.localPosition; // Store the card's original position
 
+        // Find the HandManager in the parent hierarchy
+        handManager = GetComponentInParent<HandManager>();
+        uiManager = FindAnyObjectByType<UIManager>();
+
         // Ensure the highlight object is initially inactive
         if (highlightObject != null)
         {
             highlightObject.SetActive(false);
         }
+
+        // Get the Canvas attached to the card's RectTransform
+        cardCanvas = GetComponentInChildren<Canvas>();
     }
 
     public void SetPosition(Vector3 newPosition)
@@ -44,10 +55,20 @@ public class DragUIObject : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         // Set the dragging flag to true
         isDragging = true;
 
-        // Hide the highlight object when dragging starts (optional, depends on the UI behavior you want)
+        // Ensure the highlight object is visible when dragging
         if (highlightObject != null)
         {
-            highlightObject.SetActive(false);
+            highlightObject.SetActive(true); // Show the highlight object
+        }
+
+        // Lift the card slightly when dragging starts
+        StopAllCoroutines();
+        StartCoroutine(SmoothHoverTransition(returnPosition + new Vector3(0, hoverHeight, 0)));
+
+        // Set sorting order of the Canvas to a high value to make it appear on top during drag
+        if (cardCanvas != null)
+        {
+            cardCanvas.sortingOrder = 100;  // Temporarily move to the top when dragging
         }
     }
 
@@ -66,8 +87,11 @@ public class DragUIObject : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         // Update the position of the object, snapping the center to the cursor on the X-axis
         rectTransform.localPosition = new Vector3(originalPanelLocalPosition.x + offsetX, originalPanelLocalPosition.y, originalPanelLocalPosition.z);
 
-        // Debug output (can be commented out once you are sure it's working)
-        Debug.Log($"Drag - LocalPointerPosition: {localPointerPosition}, OffsetX: {offsetX}, New Position: {rectTransform.localPosition}");
+        // After dragging, notify the HandManager to reorder cards
+        if (handManager != null)
+        {
+            handManager.ReorderCards();
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -110,6 +134,27 @@ public class DragUIObject : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         // Smoothly return to the original position when the object is released
         StopAllCoroutines(); // Stop any ongoing transition
         StartCoroutine(SmoothReturnToOriginalPosition(returnPosition));
+
+        // Optionally hide the highlight object when dragging ends
+        if (highlightObject != null)
+        {
+            highlightObject.SetActive(false); // Hide the highlight object when not dragging
+        }
+        ResetCardSortingOrder();
+    }
+
+    public void ResetCardSortingOrder()
+    {
+        // Loop through all cards and set their sorting order
+        for (int i = 0; i < handManager.cardsInHand.Count; i++)
+        {
+            GameObject card = handManager.cardsInHand[i];
+            Canvas cardCanvas = card.GetComponentInChildren<Canvas>();  // Get the canvas of the card
+            
+            // Set the sorting order based on the position in the hand
+            cardCanvas.sortingOrder = i;  // Use the index in the list as the sorting order
+        }
+        uiManager.UpdateGameplayUI();
     }
 
     // Coroutine to smoothly transition between positions

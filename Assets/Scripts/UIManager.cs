@@ -44,6 +44,7 @@ public class UIManager : MonoBehaviour
     {
         gameplayPanelController.UpdateHandTotals(
             playerHand.GetTotal(),
+            playerHand.GetValueTotal(),
             dealer.HandTotal()
         );
 
