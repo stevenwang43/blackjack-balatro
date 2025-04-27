@@ -12,7 +12,7 @@ public class DragUIObject : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
     public HandManager handManager;
     public UIManager uiManager;
     public float movementSensitivity = 1.0f; // Adjustable sensitivity
-    public float hoverHeight = 50f; // How much to move the card up on hover
+    public float hoverHeight = 60f; // How much to move the card up on hover
     private Vector3 returnPosition; // Store the original position for resetting on hover exit
     public float hoverMoveSpeed = 5f; // Speed of hover transition
 
@@ -68,7 +68,7 @@ public class DragUIObject : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         // Set sorting order of the Canvas to a high value to make it appear on top during drag
         if (cardCanvas != null)
         {
-            cardCanvas.sortingOrder = 100;  // Temporarily move to the top when dragging
+            cardCanvas.sortingOrder = 1;  // Temporarily move to the top when dragging
         }
     }
 
@@ -152,7 +152,7 @@ public class DragUIObject : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
             Canvas cardCanvas = card.GetComponentInChildren<Canvas>();  // Get the canvas of the card
             
             // Set the sorting order based on the position in the hand
-            cardCanvas.sortingOrder = i;  // Use the index in the list as the sorting order
+            cardCanvas.sortingOrder = -i;  // Use the index in the list as the sorting order
         }
         uiManager.UpdateGameplayUI();
     }
