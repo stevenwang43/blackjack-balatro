@@ -157,7 +157,7 @@ public class HandManager : MonoBehaviour
             float horizontalOffset = i * cardSpacing;
             Vector3 newPosition = new Vector3(horizontalOffset, 0f, 0f);
             cardsInHand[i].GetComponent<DragUIObject>().SetPosition(newPosition);
-            cardsInHand[i].GetComponentInChildren<Canvas>().sortingOrder = i;
+            cardsInHand[i].GetComponentInChildren<Canvas>().sortingOrder = -i;
         }
     }
 

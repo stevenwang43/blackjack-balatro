@@ -16,4 +16,10 @@ MonoBehaviour:
   cardSuit: 2
   displayValue: 6
   cardType: 00000000
-  cardSprite: {fileID: 4315214628464698562, guid: ed4590ac84a0e9940a208dad8aa11278, type: 3}
+  cardSprite: {fileID: -8595797820850409264, guid: 31f0fc00cab2dac4999b29d5352e2a5f, type: 3}
+  hasModifier: 0
+  modifierName: 
+  modifierDescription: 
+  modifierEffect: 0
+  modifierValue: 0
+  modifierDuration: -1

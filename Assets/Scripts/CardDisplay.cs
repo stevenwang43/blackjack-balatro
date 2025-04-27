@@ -7,8 +7,6 @@ public class CardDisplay : MonoBehaviour
 {
     public Card cardData;
     public Image cardImage;
-    public TMP_Text valueText;
-    public Image[] suitImages;
     void Start()
     {
         UpdateCardDisplay();
@@ -16,12 +14,6 @@ public class CardDisplay : MonoBehaviour
 
     public void UpdateCardDisplay()
     {
-        valueText.text = cardData.displayValue;
-
-        for (int i = 0; i < suitImages.Length; i++) {
-            if (i == cardData.cardSuit) {
-                suitImages[i].gameObject.SetActive(true);
-            }
-        }
+        cardImage.sprite = cardData.cardSprite;
     }
 }
