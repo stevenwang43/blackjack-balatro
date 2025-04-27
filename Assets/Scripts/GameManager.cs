@@ -7,6 +7,7 @@ public class GameManager : MonoBehaviour
 
     public HandManager playerHand;
     public DeckManager playerDeck;
+    public HandManager dealerHand;
     public UIManager uiManager;
     public MainManager manager;
     public ShopManager shopManager;
@@ -109,7 +110,6 @@ public class GameManager : MonoBehaviour
     IEnumerator Win()
     {
         state = GameState.RoundWon;
-        playerRoundsWon++;
         
         // Apply score modifier
         float scoreMultiplier = 1.0f;
@@ -119,6 +119,7 @@ public class GameManager : MonoBehaviour
         }
         
         Score += Mathf.RoundToInt(1 * scoreMultiplier);
+        dealer.TakeDamage(playerHand.GetValueTotal(), dealer.HandTotal());
         uiManager.UpdateGameplayUI();
         
         // Update modifier durations after round end
@@ -143,6 +144,8 @@ public class GameManager : MonoBehaviour
             shopManager.GainMoney(moneyReward);
             playerHand.ResetHand();
             dealer.ResetHand();
+            dealer.maxHealth *= 2;
+            dealer.health = dealer.maxHealth;
             manager.setScene(MainManager.SceneState.Shop);
         } else {
             ResetGame();
@@ -201,23 +204,11 @@ public class GameManager : MonoBehaviour
                 blackjackThreshold = modifierManager.GetModifierValue(ModifierManager.ModifierType.BlackjackThreshold);
             }
             
-            // Apply dealer cap if applicable
-            int dealerTotal = dealer.HandTotal();
-            if (dealerTotal > dealerCap)
+            if (playerHand.GetTotal() <= blackjackThreshold)
             {
-                StartCoroutine(Win()); // Player wins if dealer exceeds cap
-            }
-            else if(dealerTotal > blackjackThreshold)
-            {
-                StartCoroutine(Win()); // Dealer bust
-            }
-            else if (dealerTotal >= playerHand.GetTotal())
-            {
-                StartCoroutine(Lose()); // Dealer wins
-            }
-            else
-            {
-                StartCoroutine(Win()); // Player wins
+                StartCoroutine(Win());
+            } else {
+                StartCoroutine(Lose());
             }
         }
         else
