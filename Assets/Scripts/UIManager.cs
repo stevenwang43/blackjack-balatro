@@ -51,6 +51,7 @@ public class UIManager : MonoBehaviour
         gameplayPanelController.UpdateScore(gameManager.Score);
         gameplayPanelController.UpdateGameCount(gameManager.playerRoundsWon, gameManager.playerRoundsLost);
         gameplayPanelController.UpdateDeckText(playerDeck.deckCards.Count, playerDeck.allCards.Count);
+        gameplayPanelController.UpdateDealerHealthText((int)dealer.health, (int)dealer.maxHealth);
 
         switch (gameManager.state)
         {
@@ -61,10 +62,10 @@ public class UIManager : MonoBehaviour
                 gameplayPanelController.SetGameStateUI("Dealer's Turn", false);
                 break;
             case GameManager.GameState.RoundWon:
-                gameplayPanelController.SetGameStateUI("You Win!", false);
+                gameplayPanelController.SetGameStateUI("You dealt " + Mathf.Max(dealer.damageTaken, 0) + " damage!", false);
                 break;
             case GameManager.GameState.RoundLost:
-                gameplayPanelController.SetGameStateUI("You Lose!", false);
+                gameplayPanelController.SetGameStateUI("Busted!", false);
                 break;
         }
     }

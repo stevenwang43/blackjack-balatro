@@ -9,6 +9,7 @@ public class GameplayPanelController : MonoBehaviour
     public TMP_Text playerHandTotal;
     public TMP_Text playerHandValueTotal;
     public TMP_Text dealerHandTotal;
+    public TMP_Text dealerHealthText;
     public TMP_Text gameResultText;
     public TMP_Text playerScoreText;
     
@@ -47,6 +48,11 @@ public class GameplayPanelController : MonoBehaviour
     public void UpdateDeckText(int remaining, int total)
     {
         deckText.text = $"{remaining} / {total}";
+    }
+
+    public void UpdateDealerHealthText(int remaining, int total)
+    {
+        dealerHealthText.text = $"{remaining} / {total}";
     }
 
     public void SetGameStateUI(string resultText, bool showButtons)

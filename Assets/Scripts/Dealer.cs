@@ -4,7 +4,18 @@ public class Dealer : MonoBehaviour
 {
     public DeckManager deck;
     public HandManager hand;
-    
+    public GameManager gameManager;
+    public GameplayPanelController gameplayPanelController;
+    public double health;
+    public double maxHealth = 20;
+    public int damageTaken;
+
+    void Start()
+    {
+        health = maxHealth;
+        gameplayPanelController.UpdateDealerHealthText((int)health, (int)maxHealth);
+    }
+
     //return 0 on stand, 1 on hit
     public int TakeTurn()
     {
@@ -38,5 +49,17 @@ public class Dealer : MonoBehaviour
     public void ResetHand()
     {
         hand.ResetHand();
+    }
+
+    public void TakeDamage(int damage, int dealerDraw) {
+        if (dealerDraw > 21) {
+            dealerDraw = 0;
+        }
+        damageTaken = damage - dealerDraw;
+        health = (int)health - Mathf.Max(damageTaken, 0);
+        if (health <= 0) {
+            gameManager.playerRoundsWon += 1;
+        }
+        gameplayPanelController.UpdateDealerHealthText((int)health, (int)maxHealth);
     }
 }

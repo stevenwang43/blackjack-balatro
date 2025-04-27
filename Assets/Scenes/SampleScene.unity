@@ -700,6 +700,7 @@ MonoBehaviour:
   playerHandTotal: {fileID: 372723082}
   playerHandValueTotal: {fileID: 1354003643}
   dealerHandTotal: {fileID: 99218128}
+  dealerHealthText: {fileID: 1024395328}
   gameResultText: {fileID: 333845879}
   playerScoreText: {fileID: 2008304903}
   gameCountText: {fileID: 2054833015}
@@ -1265,6 +1266,7 @@ MonoBehaviour:
   dealer: {fileID: 2106579006}
   playerHand: {fileID: 1255753363}
   playerDeck: {fileID: 800764293}
+  dealerHand: {fileID: 1921670635}
   uiManager: {fileID: 1278027757}
   manager: {fileID: 1074510463}
   shopManager: {fileID: 1152080566}
@@ -3674,6 +3676,7 @@ RectTransform:
   - {fileID: 2054833014}
   - {fileID: 2008304902}
   - {fileID: 99218127}
+  - {fileID: 1024395327}
   - {fileID: 1508333815}
   m_Father: {fileID: 162617459}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4263,6 +4266,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deck: {fileID: 1031752788}
   hand: {fileID: 1921670635}
+  gameManager: {fileID: 507544425}
+  gameplayPanelController: {fileID: 162617462}
+  health: 0
+  maxHealth: 20
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
