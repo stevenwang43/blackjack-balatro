@@ -35,10 +35,10 @@ public class ShopManager : MonoBehaviour {
         
         // Combine the arrays
         List<Card> combinedCards = new List<Card>();
-        // if (standardCards != null && standardCards.Length > 0)
-        //     combinedCards.AddRange(standardCards);
-        if (specialCards != null && specialCards.Length > 0)
-            combinedCards.AddRange(specialCards);
+        if (standardCards != null && standardCards.Length > 0)
+            combinedCards.AddRange(standardCards);
+        //if (specialCards != null && specialCards.Length > 0)
+            //combinedCards.AddRange(specialCards);
             
         allAvailableCards = combinedCards.ToArray();
         Debug.Log($"Loaded {allAvailableCards.Length} cards into shop ({standardCards?.Length ?? 0} standard, {specialCards?.Length ?? 0} special)");
