@@ -313,7 +313,7 @@ Canvas:
   m_PlaneDistance: 100
   m_PixelPerfect: 0
   m_ReceivesEvents: 1
-  m_OverrideSorting: 0
+  m_OverrideSorting: 1
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
   m_VertexColorAlwaysGammaSpace: 1
@@ -630,8 +630,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   highlightObject: {fileID: 8417280165093757198}
+  handManager: {fileID: 0}
   movementSensitivity: 1
   hoverHeight: 50
+  hoverMoveSpeed: 5
 --- !u!1 &7829598912049081898
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,9 +7,11 @@ public class GameplayPanelController : MonoBehaviour
     public Button hitButton;
     public Button standButton;
     public TMP_Text playerHandTotal;
+    public TMP_Text playerHandValueTotal;
     public TMP_Text dealerHandTotal;
     public TMP_Text gameResultText;
     public TMP_Text playerScoreText;
+    
     public TMP_Text gameCountText;
     public TMP_Text deckText;
 
@@ -25,9 +27,10 @@ public class GameplayPanelController : MonoBehaviour
         });
     }
 
-    public void UpdateHandTotals(int playerTotal, int dealerTotal)
+    public void UpdateHandTotals(int playerTotal, int playerValueTotal, int dealerTotal)
     {
         playerHandTotal.text = playerTotal.ToString();
+        playerHandValueTotal.text = playerValueTotal.ToString();
         dealerHandTotal.text = dealerTotal.ToString();
     }
 
