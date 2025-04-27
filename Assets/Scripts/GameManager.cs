@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     public UIManager uiManager;
     public MainManager manager;
     public ShopManager shopManager;
+    public ModifierManager modifierManager;
 
     int score = 0;
     public int Score
@@ -32,12 +33,37 @@ public class GameManager : MonoBehaviour
     }
     public GameState state = GameState.PlayerTurn;
 
+    void Start()
+    {
+        // Initialize ModifierManager if it doesn't exist
+        if (modifierManager == null)
+        {
+            if (ModifierManager.Instance == null)
+            {
+                GameObject modObj = new GameObject("ModifierManager");
+                modifierManager = modObj.AddComponent<ModifierManager>();
+            }
+            else
+            {
+                modifierManager = ModifierManager.Instance;
+            }
+        }
+    }
+
     public void PlayerDraw()
     {
         Debug.Log("Player Draws Card");
         playerDeck.DrawCard(playerHand);
         uiManager.UpdateGameplayUI();
-        if(playerHand.GetTotal() > 21)
+        
+        // Check bust against possibly modified blackjack threshold
+        float blackjackThreshold = 21;
+        if (modifierManager != null)
+        {
+            blackjackThreshold = modifierManager.GetModifierValue(ModifierManager.ModifierType.BlackjackThreshold);
+        }
+        
+        if(playerHand.GetTotal() > blackjackThreshold)
         {
             StartCoroutine(Lose());
             return;
@@ -59,8 +85,23 @@ public class GameManager : MonoBehaviour
     {
         state = GameState.RoundLost;
         playerRoundsLost++;
-        Score -= 1;
+        
+        // Apply score modifier
+        float scoreMultiplier = 1.0f;
+        if (modifierManager != null)
+        {
+            scoreMultiplier = modifierManager.GetModifierValue(ModifierManager.ModifierType.ScoreMultiplier);
+        }
+        
+        Score -= Mathf.RoundToInt(1 * scoreMultiplier);
         uiManager.UpdateGameplayUI();
+        
+        // Update modifier durations after round end
+        if (modifierManager != null)
+        {
+            modifierManager.UpdateModifierDurations();
+        }
+        
         yield return new WaitForSeconds(2f);
         ResetGame();
     }
@@ -69,18 +110,43 @@ public class GameManager : MonoBehaviour
     {
         state = GameState.RoundWon;
         playerRoundsWon++;
-        Score += 1;
+        
+        // Apply score modifier
+        float scoreMultiplier = 1.0f;
+        if (modifierManager != null)
+        {
+            scoreMultiplier = modifierManager.GetModifierValue(ModifierManager.ModifierType.ScoreMultiplier);
+        }
+        
+        Score += Mathf.RoundToInt(1 * scoreMultiplier);
         uiManager.UpdateGameplayUI();
+        
+        // Update modifier durations after round end
+        if (modifierManager != null)
+        {
+            modifierManager.UpdateModifierDurations();
+        }
 
         yield return new WaitForSeconds(2f);
         if (playerRoundsWon == 1) {
             yield return new WaitForSeconds(2f);
-            shopManager.GainMoney(15);
+            
+            // Apply money modifier
+            float moneyMultiplier = 1.0f;
+            if (modifierManager != null)
+            {
+                moneyMultiplier = modifierManager.GetModifierValue(ModifierManager.ModifierType.MoneyMultiplier);
+            }
+            
+            // Award money with any applicable multipliers
+            int moneyReward = Mathf.RoundToInt(15 * moneyMultiplier);
+            shopManager.GainMoney(moneyReward);
             manager.setScene(MainManager.SceneState.Shop);
         } else {
             ResetGame();
         }
     }
+    
     public void ResetGame()
     {
         playerHand.ResetHand();
@@ -97,6 +163,13 @@ public class GameManager : MonoBehaviour
         playerRoundsWon = 0;
         playerRoundsLost = 0;
         Score = 0;
+        
+        // Reset all modifiers for a new game
+        if (modifierManager != null)
+        {
+            modifierManager.ResetAllModifiers();
+        }
+        
         state = GameState.PlayerTurn;
         uiManager.StartGame();
         uiManager.UpdateGameplayUI();
@@ -116,17 +189,33 @@ public class GameManager : MonoBehaviour
                 result = dealer.TakeTurn();
                 uiManager.UpdateGameplayUI();
             }
-            if(dealer.HandTotal() > 21)
+            
+            // Get dealer cap modifier if exists
+            float dealerCap = 100f; // Default high value (no cap)
+            float blackjackThreshold = 21;
+            if (modifierManager != null)
             {
-                StartCoroutine(Win());
+                dealerCap = modifierManager.GetModifierValue(ModifierManager.ModifierType.DealerHandleCap);
+                blackjackThreshold = modifierManager.GetModifierValue(ModifierManager.ModifierType.BlackjackThreshold);
             }
-            else if (dealer.HandTotal() >= playerHand.GetTotal())
+            
+            // Apply dealer cap if applicable
+            int dealerTotal = dealer.HandTotal();
+            if (dealerTotal > dealerCap)
             {
-                StartCoroutine(Lose()); // dealer wins
+                StartCoroutine(Win()); // Player wins if dealer exceeds cap
+            }
+            else if(dealerTotal > blackjackThreshold)
+            {
+                StartCoroutine(Win()); // Dealer bust
+            }
+            else if (dealerTotal >= playerHand.GetTotal())
+            {
+                StartCoroutine(Lose()); // Dealer wins
             }
             else
             {
-                StartCoroutine(Win()); // player wins
+                StartCoroutine(Win()); // Player wins
             }
         }
         else
@@ -136,8 +225,4 @@ public class GameManager : MonoBehaviour
             state = GameState.PlayerTurn;
         }
     }
-
-
-
-
 }

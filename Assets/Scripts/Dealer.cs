@@ -2,14 +2,27 @@ using UnityEngine;
 
 public class Dealer : MonoBehaviour
 {
-
     public DeckManager deck;
     public HandManager hand;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    
     //return 0 on stand, 1 on hit
     public int TakeTurn()
     {
-        if(hand.GetTotal() < 17)
+        // Get dealer threshold from modifiers if they exist
+        float dealerStandThreshold = 17f; // Default dealer stands on 17
+        
+        // If a DealerHandleCap modifier exists, dealer will stand at a lower value
+        if (ModifierManager.Instance != null)
+        {
+            float dealerCap = ModifierManager.Instance.GetModifierValue(ModifierManager.ModifierType.DealerHandleCap);
+            if (dealerCap < 21)
+            {
+                // If there's a cap below 21, adjust dealer behavior to avoid exceeding it
+                dealerStandThreshold = Mathf.Max(10, dealerCap - 3);
+            }
+        }
+        
+        if(hand.GetTotal() < dealerStandThreshold)
         {
             deck.DrawCard(hand);
             return 1;
@@ -26,6 +39,4 @@ public class Dealer : MonoBehaviour
     {
         hand.ResetHand();
     }
-
-
 }

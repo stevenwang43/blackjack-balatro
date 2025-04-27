@@ -29,7 +29,19 @@ public class ShopManager : MonoBehaviour {
         UpdateMoneyUI();
         UpdateRerollUI();
 
-        allAvailableCards = Resources.LoadAll<Card>("Standard Deck");
+        // Load cards from both Standard Deck and Special Cards folders
+        Card[] standardCards = Resources.LoadAll<Card>("Standard Deck");
+        Card[] specialCards = Resources.LoadAll<Card>("Special Cards");
+        
+        // Combine the arrays
+        List<Card> combinedCards = new List<Card>();
+        // if (standardCards != null && standardCards.Length > 0)
+        //     combinedCards.AddRange(standardCards);
+        if (specialCards != null && specialCards.Length > 0)
+            combinedCards.AddRange(specialCards);
+            
+        allAvailableCards = combinedCards.ToArray();
+        Debug.Log($"Loaded {allAvailableCards.Length} cards into shop ({standardCards?.Length ?? 0} standard, {specialCards?.Length ?? 0} special)");
 
         if (rerollButton != null)
             rerollButton.onClick.AddListener(RerollShop);
@@ -39,24 +51,60 @@ public class ShopManager : MonoBehaviour {
         LoadShopItems();
     }
 
-void LoadShopItems() {
-    foreach (ShopSlot slot in activeSlots) {
-        if (slot != null)
-            Destroy(slot.gameObject);
+    void LoadShopItems() {
+        foreach (ShopSlot slot in activeSlots) {
+            if (slot != null)
+                Destroy(slot.gameObject);
+        }
+        activeSlots.Clear();
+
+        float spacing = 250f;
+        float startX = -((shopSlotCount - 1) * spacing) / 2;
+
+        for (int i = 0; i < shopSlotCount; i++) {
+            Card randomCard = GetRandomCard();
+            int price = 1; // Default price
+            
+            // Set higher prices for cards with modifiers
+            if (randomCard.hasModifier) {
+                // Base price for modifier cards
+                price = 5;
+                
+                // Add price based on modifier type and value
+                switch (randomCard.modifierEffect) {
+                    case Card.ModifierEffect.BlackjackThresholdIncrease:
+                        price += Mathf.RoundToInt(10 * randomCard.modifierValue); // Very valuable
+                        break;
+                    case Card.ModifierEffect.HandTotalBonus:
+                        price += Mathf.RoundToInt(5 * randomCard.modifierValue);
+                        break;
+                    case Card.ModifierEffect.CardValueMultiplier:
+                        price += Mathf.RoundToInt(15 * randomCard.modifierValue);
+                        break;
+                    case Card.ModifierEffect.ScoreMultiplier:
+                        price += Mathf.RoundToInt(8 * randomCard.modifierValue);
+                        break;
+                    case Card.ModifierEffect.MoneyMultiplier:
+                        price += Mathf.RoundToInt(12 * randomCard.modifierValue);
+                        break;
+                    case Card.ModifierEffect.DealerHandleCap:
+                        // Lower cap = higher price (21 - cap = price addition)
+                        price += Mathf.RoundToInt(21 - randomCard.modifierValue) * 3;
+                        break;
+                }
+                
+                // Permanent modifiers are more expensive than temporary ones
+                if (randomCard.modifierDuration < 0) {
+                    price = Mathf.RoundToInt(price * 1.5f);
+                }
+            }
+            
+            ShopSlot newSlot = Instantiate(shopSlot, shopContentParent);
+            newSlot.InitializeSlot(randomCard, price, this);
+            newSlot.transform.localPosition = new Vector3(350f * (i - 2), 0f, 0f);
+            activeSlots.Add(newSlot);
+        }
     }
-    activeSlots.Clear();
-
-    float spacing = 250f;
-    float startX = -((shopSlotCount - 1) * spacing) / 2;
-
-    for (int i = 0; i < shopSlotCount; i++) {
-        ShopSlot newSlot = Instantiate(shopSlot, shopContentParent);
-        newSlot.InitializeSlot(GetRandomCard(), 1, this);
-        newSlot.transform.localPosition = new Vector3(350f * (i - 2), 0f, 0f);
-        activeSlots.Add(newSlot);
-    }
-}
-
 
     private Card GetRandomCard() {
         int randomIndex = Random.Range(0, allAvailableCards.Length);
@@ -90,6 +138,13 @@ void LoadShopItems() {
         if (currentMoney >= slot.price) {
             currentMoney -= slot.price;
             deckManager.allCards.Add(slot.card);
+            
+            // Apply card modifiers if it has any
+            if (slot.card.hasModifier) {
+                slot.card.ApplyModifier();
+                Debug.Log($"Applied modifier: {slot.card.modifierName} from {slot.card.name}");
+            }
+            
             activeSlots.Remove(slot);
             Destroy(slot.gameObject);
             UpdateMoneyUI();

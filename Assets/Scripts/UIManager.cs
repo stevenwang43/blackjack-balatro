@@ -11,6 +11,9 @@ public class UIManager : MonoBehaviour
     public MainManager mainManager;
     public DeckManager playerDeck;
 
+    [Header("Modifier UI")]
+    public ModifierUIManager modifierUIManager;
+
     void Start()
     {
         // Setup the Start Panel
@@ -25,6 +28,16 @@ public class UIManager : MonoBehaviour
             onStand: () => gameManager.PlayerStand()
         );
         UpdateGameplayUI();
+
+        // Make sure the modifier UI is set up
+        if (modifierUIManager == null)
+        {
+            modifierUIManager = GetComponent<ModifierUIManager>();
+            if (modifierUIManager == null)
+            {
+                modifierUIManager = gameObject.AddComponent<ModifierUIManager>();
+            }
+        }
     }
 
     public void UpdateGameplayUI()
