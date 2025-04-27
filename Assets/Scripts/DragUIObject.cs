@@ -48,49 +48,52 @@ public class DragUIObject : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
 
     public void OnPointerDown(PointerEventData eventData)
     {
-        // Convert screen point to local point in the canvas
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out originalLocalPointerPosition);
-        originalPanelLocalPosition = rectTransform.localPosition;
+        if (handManager != null && handManager.name == "PlayerHand") {
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.GetComponent<RectTransform>(), eventData.position, eventData.pressEventCamera, out originalLocalPointerPosition);
+            originalPanelLocalPosition = rectTransform.localPosition;
 
-        // Set the dragging flag to true
-        isDragging = true;
+            // Set the dragging flag to true
+            isDragging = true;
 
-        // Ensure the highlight object is visible when dragging
-        if (highlightObject != null)
-        {
-            highlightObject.SetActive(true); // Show the highlight object
-        }
+            // Ensure the highlight object is visible when dragging
+            if (highlightObject != null)
+            {
+                highlightObject.SetActive(true); // Show the highlight object
+            }
 
-        // Lift the card slightly when dragging starts
-        StopAllCoroutines();
-        StartCoroutine(SmoothHoverTransition(returnPosition + new Vector3(0, hoverHeight, 0)));
+            // Lift the card slightly when dragging starts
+            StopAllCoroutines();
+            StartCoroutine(SmoothHoverTransition(returnPosition + new Vector3(0, hoverHeight, 0)));
 
-        // Set sorting order of the Canvas to a high value to make it appear on top during drag
-        if (cardCanvas != null)
-        {
-            cardCanvas.sortingOrder = 1;  // Temporarily move to the top when dragging
+            // Set sorting order of the Canvas to a high value to make it appear on top during drag
+            if (cardCanvas != null)
+            {
+                cardCanvas.sortingOrder = 1;  // Temporarily move to the top when dragging
+            }
         }
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        // Get the position of the pointer in screen space
-        Vector2 screenPointerPosition = eventData.position;
+        if (handManager != null && handManager.name == "PlayerHand") {
+            // Get the position of the pointer in screen space
+            Vector2 screenPointerPosition = eventData.position;
 
-        // Convert the screen position directly to the local position in the canvas
-        Vector2 localPointerPosition;
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.GetComponent<RectTransform>(), screenPointerPosition, eventData.pressEventCamera, out localPointerPosition);
+            // Convert the screen position directly to the local position in the canvas
+            Vector2 localPointerPosition;
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(canvas.GetComponent<RectTransform>(), screenPointerPosition, eventData.pressEventCamera, out localPointerPosition);
 
-        // Calculate the offset only along the X-axis
-        float offsetX = localPointerPosition.x - originalLocalPointerPosition.x;
+            // Calculate the offset only along the X-axis
+            float offsetX = localPointerPosition.x - originalLocalPointerPosition.x;
 
-        // Update the position of the object, snapping the center to the cursor on the X-axis
-        rectTransform.localPosition = new Vector3(originalPanelLocalPosition.x + offsetX, originalPanelLocalPosition.y, originalPanelLocalPosition.z);
+            // Update the position of the object, snapping the center to the cursor on the X-axis
+            rectTransform.localPosition = new Vector3(originalPanelLocalPosition.x + offsetX, originalPanelLocalPosition.y, originalPanelLocalPosition.z);
 
-        // After dragging, notify the HandManager to reorder cards
-        if (handManager != null)
-        {
-            handManager.ReorderCards();
+            // After dragging, notify the HandManager to reorder cards
+            if (handManager != null)
+            {
+                handManager.ReorderCards();
+            }
         }
     }
 
@@ -140,7 +143,9 @@ public class DragUIObject : MonoBehaviour, IDragHandler, IPointerDownHandler, IP
         {
             highlightObject.SetActive(false); // Hide the highlight object when not dragging
         }
-        ResetCardSortingOrder();
+        if (handManager != null) {
+            ResetCardSortingOrder();
+        }
     }
 
     public void ResetCardSortingOrder()

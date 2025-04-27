@@ -153,6 +153,8 @@ public class GameManager : MonoBehaviour
             // Award money with any applicable multipliers
             int moneyReward = Mathf.RoundToInt(15 * moneyMultiplier);
             shopManager.GainMoney(moneyReward);
+            playerHand.ResetHand();
+            dealer.ResetHand();
             manager.setScene(MainManager.SceneState.Shop);
         } else {
             ResetGame();
