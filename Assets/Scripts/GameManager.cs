@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour
     public HandManager playerHand;
     public DeckManager playerDeck;
     public UIManager uiManager;
+    public MainManager manager;
+
     int score = 0;
     public int Score
     {
@@ -82,8 +84,14 @@ public class GameManager : MonoBehaviour
         playerRoundsWon++;
         Score += 1;
         uiManager.UpdateGameplayUI();
+
         yield return new WaitForSeconds(2f);
-        ResetGame();
+        if (playerRoundsWon == 3) {
+            yield return new WaitForSeconds(2f);
+            manager.setScene(MainManager.SceneState.Shop);
+        } else {
+            ResetGame();
+        }
     }
     public void ResetGame()
     {

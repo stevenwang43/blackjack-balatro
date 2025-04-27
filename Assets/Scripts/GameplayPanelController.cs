@@ -11,6 +11,7 @@ public class GameplayPanelController : MonoBehaviour
     public TMP_Text gameResultText;
     public TMP_Text playerScoreText;
     public TMP_Text gameCountText;
+    public TMP_Text deckText;
 
     public void SetupButtons(System.Action onHit, System.Action onStand)
     {
@@ -38,6 +39,11 @@ public class GameplayPanelController : MonoBehaviour
     public void UpdateGameCount(int wins, int losses)
     {
         gameCountText.text = $"{wins} / {losses}";
+    }
+
+    public void UpdateDeckText(int remaining, int total)
+    {
+        deckText.text = $"{remaining} / {total}";
     }
 
     public void SetGameStateUI(string resultText, bool showButtons)
