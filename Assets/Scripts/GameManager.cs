@@ -8,6 +8,7 @@ public class GameManager : MonoBehaviour
     public HandManager playerHand;
     public DeckManager playerDeck;
     public UIManager uiManager;
+    public MainManager mainManager;
     int score = 0;
     public int Score
     {
@@ -70,7 +71,6 @@ public class GameManager : MonoBehaviour
     {
         state = GameState.RoundLost;
         playerRoundsLost++;
-        Score -= 1;
         uiManager.UpdateGameplayUI();
         yield return new WaitForSeconds(2f);
         ResetGame();
@@ -80,11 +80,39 @@ public class GameManager : MonoBehaviour
     {
         state = GameState.RoundWon;
         playerRoundsWon++;
-        Score += 1;
+        Score += playerHand.GetTotal();
+        if (playerHand.GetTotal() == 21)
+        {
+            Score += playerHand.GetTotal();
+        }
         uiManager.UpdateGameplayUI();
         yield return new WaitForSeconds(2f);
+        if(playerRoundsWon >= 1)
+        {
+            GameWin();
+            yield break;
+        }
+        if (playerRoundsLost >= 5)
+        {
+            GameLose();
+            yield break;
+        }
         ResetGame();
     }
+
+    public void GameWin()
+    {
+        Debug.Log("Game Won");
+        uiManager.UpdateGameplayUI();
+        StartCoroutine(mainManager.WinRound()); 
+    }
+    public void GameLose()
+    {
+        Debug.Log("Game Lost");
+        uiManager.UpdateGameplayUI();
+        mainManager.setScene(MainManager.SceneState.StartMenu);
+    }
+
     public void ResetGame()
     {
         playerHand.ResetHand();

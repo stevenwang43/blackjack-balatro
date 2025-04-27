@@ -7,8 +7,12 @@ public class DeckManager : MonoBehaviour
     public List<Card> allCards = new List<Card>();
     private int currentIndex = 0;
 
+    public AudioClip shuffleSound; // <- Add this!
+    private AudioSource audioSource; // <- For playing the sound
+
     void Start()
     {
+        audioSource = GetComponent<AudioSource>(); // Grab the AudioSource
         Card[] cards = Resources.LoadAll<Card>("Cards");
         allCards.AddRange(cards);
         Shuffle(); // Shuffle the deck after loading
@@ -33,6 +37,7 @@ public class DeckManager : MonoBehaviour
 
     private void Shuffle()
     {
+        Debug.Log("shuffle deck");
         for (int i = allCards.Count - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
@@ -42,5 +47,11 @@ public class DeckManager : MonoBehaviour
         }
 
         currentIndex = 0; // Reset the draw index after shuffle
+
+        // Play the shuffle sound here
+        if (shuffleSound != null && audioSource != null)
+        {
+            audioSource.PlayOneShot(shuffleSound);
+        }
     }
 }
