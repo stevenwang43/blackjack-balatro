@@ -9,6 +9,10 @@ public class CardGenerator : MonoBehaviour
     [MenuItem("Tools/Create Modifier Cards")]
     public static void CreateModifierCards()
     {
+        /*
+        Script to create 6 example AI generated modifier cards with unique effects
+        Can click the button and edit the card properties in the inspector
+        */
         // Create directory if it doesn't exist
         string folderPath = "Assets/Resources/Special Cards";
         if (!Directory.Exists(folderPath))
