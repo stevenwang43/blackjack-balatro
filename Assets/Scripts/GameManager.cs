@@ -159,6 +159,7 @@ public class GameManager : MonoBehaviour
             dealer.maxHealth *= 2;
             dealer.health = dealer.maxHealth;
             manager.setScene(MainManager.SceneState.Shop);
+            shopManager.LoadShopItems();
         } else {
             ResetGame();
         }
