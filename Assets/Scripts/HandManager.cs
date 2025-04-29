@@ -1,8 +1,6 @@
 using UnityEngine;
 using Blackjack;
 using System.Collections.Generic;
-using System;
-using System.Linq;
 
 public class HandManager : MonoBehaviour
 {

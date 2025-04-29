@@ -63,7 +63,7 @@ public class ShopManager : MonoBehaviour {
 
         for (int i = 0; i < shopSlotCount; i++) {
             Card randomCard = GetRandomCard();
-            int price = 1; // Default price
+            int price = Random.Range(1, 5); // Default price
             
             // Set higher prices for cards with modifiers
             if (randomCard.hasModifier) {

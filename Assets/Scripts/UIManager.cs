@@ -45,13 +45,15 @@ public class UIManager : MonoBehaviour
         gameplayPanelController.UpdateHandTotals(
             playerHand.GetTotal(),
             playerHand.GetValueTotal(),
-            dealer.HandTotal()
+            dealer.HandTotal(),
+            dealer.HandValueTotal()
         );
 
         gameplayPanelController.UpdateScore(gameManager.Score);
         gameplayPanelController.UpdateGameCount(gameManager.playerRoundsWon, gameManager.playerRoundsLost);
         gameplayPanelController.UpdateDeckText(playerDeck.deckCards.Count, playerDeck.allCards.Count);
         gameplayPanelController.UpdateDealerHealthText((int)dealer.health, (int)dealer.maxHealth);
+        gameplayPanelController.UpdateRoundText(gameManager.rounds);
 
         switch (gameManager.state)
         {

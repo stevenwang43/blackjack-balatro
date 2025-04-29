@@ -46,16 +46,21 @@ public class Dealer : MonoBehaviour
         return hand.GetTotal();
     }
 
+    public int HandValueTotal()
+    {
+        return hand.GetValueTotal();
+    }
+
     public void ResetHand()
     {
         hand.ResetHand();
     }
 
-    public void TakeDamage(int damage, int dealerDraw) {
+    public void TakeDamage(int damage, int block, int dealerDraw) {
         if (dealerDraw > 21) {
-            dealerDraw = 0;
+            block = 0;
         }
-        damageTaken = damage - dealerDraw;
+        damageTaken = damage - block;
         health = (int)health - Mathf.Max(damageTaken, 0);
         if (health <= 0) {
             gameManager.playerRoundsWon += 1;

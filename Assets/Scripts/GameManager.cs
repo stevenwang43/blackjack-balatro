@@ -13,6 +13,8 @@ public class GameManager : MonoBehaviour
     public ShopManager shopManager;
     public ModifierManager modifierManager;
 
+    public int rounds = 1;
+
     int score = 0;
     public int Score
     {
@@ -131,7 +133,7 @@ public class GameManager : MonoBehaviour
         }
         
         Score += Mathf.RoundToInt(1 * scoreMultiplier);
-        dealer.TakeDamage(playerHand.GetValueTotal(), dealer.HandTotal());
+        dealer.TakeDamage(playerHand.GetValueTotal(), dealer.HandValueTotal(), dealer.HandTotal());
         uiManager.UpdateGameplayUI();
         
         // Update modifier durations after round end
@@ -142,6 +144,7 @@ public class GameManager : MonoBehaviour
 
         yield return new WaitForSeconds(2f);
         if (playerRoundsWon == 1) {
+            rounds++;
             yield return new WaitForSeconds(2f);
             
             // Apply money modifier
