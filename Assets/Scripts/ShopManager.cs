@@ -51,7 +51,7 @@ public class ShopManager : MonoBehaviour {
         LoadShopItems();
     }
 
-    void LoadShopItems() {
+    public void LoadShopItems() {
         foreach (ShopSlot slot in activeSlots) {
             if (slot != null)
                 Destroy(slot.gameObject);
